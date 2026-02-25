@@ -49,7 +49,7 @@ export function createCard(customerEmail, businessEmail) {
     tokenReward: business.tokenReward,
     createdAt: Date.now(),
     // QR payload: decoded by the business to identify the customer + card
-    qrCode: `LOYALTY::${customerEmail}::${businessEmail}::${Date.now()}`,
+    qrCode: `${customerEmail.split('@')[0].toUpperCase()}-${Date.now().toString(36).toUpperCase()}`,
   };
 
   const updated = [...cards, newCard];
@@ -90,4 +90,8 @@ export function redeemCard(customerEmail, cardId) {
   const updated = cards.map(c => c.id === cardId ? { ...c, stamps: 0 } : c);
   saveCustomerCards(customerEmail, updated);
   return card.tokenReward;
+}
+
+export function deleteBusiness(email) {
+  localStorage.removeItem(`business_${email}`);
 }

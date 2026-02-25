@@ -19,7 +19,7 @@ export default function BusinessSetup({ currentUser, onLogout, onDone }) {
       businessType: currentUser.businessType,
       businessName: currentUser.businessName,
       stampsRequired: parseInt(stampsReq),
-      tokenReward: parseFloat(tokenReward),
+      appTokenReward: parseFloat(tokenReward),
       ownerEmail: currentUser.email,
       walletAddress: currentUser.walletAddress,
       createdAt: Date.now(),
@@ -45,7 +45,7 @@ export default function BusinessSetup({ currentUser, onLogout, onDone }) {
       )}
 
       <Field label="Stamps required to earn reward" type="number" min="1" max="30" value={stampsReq} onChange={e => setStampsReq(e.target.value)} />
-      <Field label="Token reward amount (SOL)" type="number" step="0.1" min="0.01" value={tokenReward} onChange={e => setTokenReward(e.target.value)} style={{ marginBottom: '32px' }} />
+      <Field label="Token reward amount " type="number" step="0.1" min="0.01" value={tokenReward} onChange={e => setTokenReward(e.target.value)} style={{ marginBottom: '32px' }} />
 
       <PrimaryButton onClick={handleCreate}>✅ Create Loyalty Program</PrimaryButton>
     </PageShell>

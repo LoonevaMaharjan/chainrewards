@@ -9,7 +9,7 @@ export default function Home({ onBusiness, onCustomer }) {
             🎁 ChainRewards
           </h1>
           <p style={{ textAlign: 'center', color: '#888', fontSize: '18px', marginBottom: '48px' }}>
-            Onchain Loyalty Program powered by Solana
+            EARN YOUR REWARDS
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>

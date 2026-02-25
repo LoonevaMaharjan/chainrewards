@@ -82,6 +82,12 @@ export default function App() {
     setView('business-dashboard');
   };
 
+  // ── NEW: called after business deletes their loyalty program ──────────────
+  const handleBusinessDeleted = () => {
+    setBusinessData(null);
+    setView('business-setup');
+  };
+
   const handleCardsChange = (updatedCards) => {
     setCustomerCards(updatedCards);
   };
@@ -108,7 +114,7 @@ export default function App() {
       return <BusinessSetup {...sharedProps} onDone={handleBusinessSetupDone} />;
 
     case 'business-dashboard':
-      return <BusinessDashboard {...sharedProps} businessData={businessData} onScan={() => setView('scan')} />;
+      return <BusinessDashboard {...sharedProps} businessData={businessData} onScan={() => setView('scan')} onDeleted={handleBusinessDeleted} />;
 
     case 'scan':
       return <ScanQR {...sharedProps} onBack={() => setView('business-dashboard')} />;

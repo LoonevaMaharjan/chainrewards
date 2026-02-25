@@ -1,13 +1,23 @@
 import React from 'react';
 import { PageShell } from './AuthCard';
 import { BUSINESS_TYPES } from '../constants';
+import { deleteBusiness } from '../utils/loyaltyCards';
 
-export default function BusinessDashboard({ currentUser, businessData, onLogout, onScan }) {
+export default function BusinessDashboard({ currentUser, businessData, onLogout, onScan, onDeleted }) {
   const config = BUSINESS_TYPES.find(b => b.id === businessData.businessType);
 
   const copyEmail = () => {
     navigator.clipboard.writeText(currentUser.email);
     alert('✅ Email copied to clipboard!');
+  };
+
+  const handleDelete = () => {
+    const confirmed = window.confirm(
+      `⚠️ Are you sure you want to delete "${businessData.businessName}"? This cannot be undone.`
+    );
+    if (!confirmed) return;
+    deleteBusiness(currentUser.email);
+    onDeleted();
   };
 
   return (
@@ -29,7 +39,7 @@ export default function BusinessDashboard({ currentUser, businessData, onLogout,
           </div>
           <div>
             <div style={{ fontSize: '40px', fontWeight: 'bold', color: config.color }}>{businessData.tokenReward}</div>
-            <div style={{ color: '#888', fontSize: '13px', marginTop: '4px' }}>SOL Reward</div>
+            <div style={{ color: '#888', fontSize: '13px', marginTop: '4px' }}>Rewards</div>
           </div>
         </div>
       </div>
@@ -55,7 +65,7 @@ export default function BusinessDashboard({ currentUser, businessData, onLogout,
       </button>
 
       {/* Share email */}
-      <div style={{ padding: '18px', background: '#e8f4fd', borderRadius: '12px', border: '1px solid #b3d9f5' }}>
+      <div style={{ padding: '18px', background: '#e8f4fd', borderRadius: '12px', border: '1px solid #b3d9f5', marginBottom: '20px' }}>
         <p style={{ margin: '0 0 8px 0', fontSize: '14px', color: '#1a6fa8', fontWeight: '600' }}>
           📧 Share your email with customers so they can link their loyalty card:
         </p>
@@ -71,6 +81,24 @@ export default function BusinessDashboard({ currentUser, businessData, onLogout,
           </button>
         </div>
       </div>
+
+      {/* Delete Program */}
+      <button
+        onClick={handleDelete}
+        style={{
+          width: '100%',
+          padding: '14px',
+          background: 'white',
+          color: '#cc0000',
+          border: '2px solid #ffcccc',
+          borderRadius: '12px',
+          fontSize: '15px',
+          fontWeight: 'bold',
+          cursor: 'pointer',
+        }}
+      >
+        🗑️ Delete Loyalty Program
+      </button>
     </PageShell>
   );
 }

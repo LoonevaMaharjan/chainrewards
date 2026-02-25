@@ -47,7 +47,7 @@ export default function ShowQR({ card, onBack }) {
         </button>
 
         <div style={{ background: 'white', borderRadius: '20px', padding: '40px', boxShadow: '0 20px 60px rgba(0,0,0,0.3)', textAlign: 'center' }}>
-          <div style={{ fontSize: '48px', marginBottom: '12px' }}>{config.stampShape}</div>
+          <img src={config.stampShape} alt={config.name} width={48} height={48} style={{ marginBottom: '12px' }} />
           <h2 style={{ fontSize: '26px', margin: '0 0 6px 0' }}>{card.businessName}</h2>
           <p style={{ color: '#888', margin: '0 0 28px 0', fontSize: '14px' }}>Show this to the business to collect your stamp</p>
 

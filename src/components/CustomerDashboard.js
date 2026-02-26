@@ -25,7 +25,7 @@ export default function CustomerDashboard({ currentUser, cards, onCardsChange, o
   const handleRedeem = (cardId) => {
     try {
       const reward = redeemCard(currentUser.email, cardId);
-      alert(`🎉 You redeemed ${reward} SOL! Check your Phantom wallet.`);
+      alert(`🎉 You redeemed ${reward} Token. Check your Phantom wallet.`);
       // Reload cards
       const { getCustomerCards } = require('../utils/loyaltyCards');
       onCardsChange(getCustomerCards(currentUser.email));
@@ -133,7 +133,7 @@ export default function CustomerDashboard({ currentUser, cards, onCardsChange, o
                       boxShadow: '0 4px 15px rgba(245,87,108,0.35)',
                     }}
                   >
-                    💰 Redeem {card.tokenReward} SOL to Wallet!
+                     Redeem {card.tokenReward} Token!
                   </button>
                 )}
               </div>

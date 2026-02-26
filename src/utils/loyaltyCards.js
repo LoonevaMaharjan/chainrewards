@@ -47,6 +47,7 @@ export function createCard(customerEmail, businessEmail) {
     stamps: 0,
     maxStamps: business.stampsRequired,
     tokenReward: business.tokenReward,
+    completedCount: 0,           // ← tracks how many times card has been fully redeemed
     createdAt: Date.now(),
     // QR payload: decoded by the business to identify the customer + card
     qrCode: `${customerEmail.split('@')[0].toUpperCase()}-${Date.now().toString(36).toUpperCase()}`,
@@ -77,7 +78,7 @@ export function addStampToCard(businessEmail, customerEmail, qrCode) {
 }
 
 /**
- * Redeem a completed card. Resets stamps back to 0.
+ * Redeem a completed card. Resets stamps back to 0 and increments completedCount.
  * In production this triggers an on-chain token transfer.
  */
 export function redeemCard(customerEmail, cardId) {
@@ -87,7 +88,16 @@ export function redeemCard(customerEmail, cardId) {
   if (!card) throw new Error('Card not found.');
   if (card.stamps < card.maxStamps) throw new Error('Card is not full yet.');
 
-  const updated = cards.map(c => c.id === cardId ? { ...c, stamps: 0 } : c);
+  const updated = cards.map(c =>
+    c.id === cardId
+      ? {
+          ...c,
+          stamps: 0,
+          completedCount: (c.completedCount ?? 0) + 1,   // ← increment on each redemption
+        }
+      : c
+  );
+
   saveCustomerCards(customerEmail, updated);
   return card.tokenReward;
 }

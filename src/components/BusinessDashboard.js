@@ -208,7 +208,7 @@ function CustomersTab({ businessEmail, config }) {
         {[
           { label: 'Total Customers', value: customers.length,                                                       emoji: '👥' },
           { label: 'Cards Completed', value: totalCompleted,                                                         emoji: '🏆' },
-          { label: 'Active Cards',    value: customers.filter(c => c.stamps > 0 && c.stamps < c.maxStamps).length,   emoji: '🎯' },
+
           { label: 'Ready to Redeem', value: customers.filter(c => c.stamps >= c.maxStamps).length,                  emoji: '⭐' },
         ].map(stat => (
           <div key={stat.label} style={{ flex: 1, background: '#f8f9fa', borderRadius: '12px', padding: '12px 8px', textAlign: 'center' }}>
@@ -224,14 +224,14 @@ function CustomersTab({ businessEmail, config }) {
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
           <thead>
             <tr style={{ background: '#f8f9fa' }}>
-              {['#', 'Customer', 'Progress', 'Completed 🏆', 'Reward', 'Status'].map(h => (
+              {['#', 'Customer', 'Progress', 'Completed 🏆', 'Status'].map(h => (
                 <th key={h} style={{ padding: '14px 16px', textAlign: 'left', fontWeight: '700', color: '#555', whiteSpace: 'nowrap' }}>{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 ? (
-              <tr><td colSpan={6} style={{ padding: '32px', textAlign: 'center', color: '#aaa' }}>No results for "{search}"</td></tr>
+              <tr><td colSpan={5} style={{ padding: '32px', textAlign: 'center', color: '#aaa' }}>No results for "{search}"</td></tr>
             ) : filtered.map((c, idx) => {
               const isFull = c.stamps >= c.maxStamps;
               return (
@@ -266,9 +266,6 @@ function CustomersTab({ businessEmail, config }) {
                       <span style={{ color: '#ccc', fontSize: '13px' }}>—</span>
                     )}
                   </td>
-
-                  {/* Reward */}
-                  <td style={{ padding: '14px 16px', color: '#555' }}>{c.tokenReward}</td>
 
                   {/* Status */}
                   <td style={{ padding: '14px 16px' }}>
@@ -307,7 +304,7 @@ function DashboardTab({ currentUser, businessData, config, onScan, handleDelete 
         <img src={config.stampShape} alt={config.name} width={64} height={64} style={{ marginBottom: '12px' }} />
         <h2 style={{ fontSize: '30px', margin: '0 0 6px 0' }}>{businessData.businessName}</h2>
         <p style={{ color: '#777', margin: 0 }}>{config.name}</p>
-        <p style={{ color: '#bbb', fontSize: '13px', margin: '6px 0 0 0' }}>{currentUser.walletAddress}</p>
+        {/* <p style={{ color: '#bbb', fontSize: '13px', margin: '6px 0 0 0' }}>{currentUser.walletAddress}</p> */}
       </div>
 
       <div style={{ background: '#f8f9fa', padding: '24px', borderRadius: '14px', marginBottom: '28px' }}>

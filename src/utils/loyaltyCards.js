@@ -59,6 +59,27 @@ export function createCard(customerEmail, businessEmail) {
 }
 
 /**
+ * Remove a single loyalty card by cardId.
+ * Returns the updated cards array.
+ */
+export function removeCard(customerEmail, cardId) {
+  const cards = getCustomerCards(customerEmail);
+  const updated = cards.filter(c => c.id !== cardId);
+  saveCustomerCards(customerEmail, updated);
+  return updated;
+}
+
+/**
+ * Delete a customer account entirely:
+ * removes their cards and their auth record from localStorage.
+ */
+export function deleteCustomerAccount(customerEmail) {
+  localStorage.removeItem(`customer_cards_${customerEmail}`);
+  localStorage.removeItem(`customer_${customerEmail}`);
+  localStorage.removeItem('session');
+}
+
+/**
  * Add a stamp to a customer's card.
  * Called by the business after scanning a QR code.
  * Returns a result object or throws on error.

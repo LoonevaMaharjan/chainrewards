@@ -2,9 +2,9 @@ import React from 'react';
 
 export default function Home({ onBusiness, onCustomer }) {
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', padding: '20px', display: 'flex', alignItems: 'center' }}>
+    <div style={{ minHeight: '100vh', background: '#ffffff', padding: '20px', display: 'flex', alignItems: 'center' }}>
       <div style={{ maxWidth: '800px', margin: '0 auto', width: '100%' }}>
-        <div style={{ background: 'white', borderRadius: '20px', padding: '48px 40px', boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}>
+        <div style={{ background: 'white', borderRadius: '20px', padding: '48px 40px', boxShadow: '0 8px 48px rgba(102, 126, 234, 0.18), 0 2px 16px rgba(0,0,0,0.08)' }}>
           <h1 style={{ fontSize: '48px', margin: '0 0 10px 0', color: '#333', textAlign: 'center' }}>
             🎁 ChainRewards
           </h1>
@@ -28,7 +28,6 @@ export default function Home({ onBusiness, onCustomer }) {
               onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 30px rgba(245,87,108,0.45)'; }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 25px rgba(245,87,108,0.35)'; }}
             >
-              {/* <div style={{ fontSize: '52px', marginBottom: '14px' }}>🏪</div> */}
               <div style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '8px' }}>I'm a Business</div>
               <div style={{ fontSize: '14px', opacity: 0.85 }}>Create your loyalty program</div>
             </button>
@@ -48,7 +47,6 @@ export default function Home({ onBusiness, onCustomer }) {
               onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 30px rgba(79,172,254,0.45)'; }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 25px rgba(79,172,254,0.35)'; }}
             >
-              {/* <div style={{ fontSize: '52px', marginBottom: '14px' }}>🎯</div> */}
               <div style={{ fontSize: '22px', fontWeight: 'bold', marginBottom: '8px' }}>I'm a Customer</div>
               <div style={{ fontSize: '14px', opacity: 0.85 }}>Collect stamps & earn rewards</div>
             </button>

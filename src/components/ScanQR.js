@@ -34,7 +34,7 @@ export default function ScanQR({ currentUser, onBack }) {
         </button>
 
         <div style={{ background: 'white', borderRadius: '20px', padding: '40px', boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}>
-          <h2 style={{ fontSize: '26px', textAlign: 'center', margin: '0 0 24px 0' }}>📷 Scan Customer QR</h2>
+          <h2 style={{ fontSize: '26px', textAlign: 'center', margin: '0 0 24px 0' }}>Scan Customer QR</h2>
 
           {/* Camera placeholder — replace with html5-qrcode in production */}
           <div style={{
@@ -47,10 +47,10 @@ export default function ScanQR({ currentUser, onBack }) {
           }}>
             <div style={{ fontSize: '56px', marginBottom: '16px' }}>📷</div>
             <p style={{ color: '#667eea', fontWeight: '600', margin: '0 0 6px 0' }}>Camera Scanner</p>
-            <p style={{ color: '#999', fontSize: '13px', margin: 0 }}>
+            {/* <p style={{ color: '#999', fontSize: '13px', margin: 0 }}>
               Integrate <code>html5-qrcode</code> here to scan QR codes with the camera.<br />
               For now, paste the QR data below.
-            </p>
+            </p> */}
           </div>
 
           {message && (

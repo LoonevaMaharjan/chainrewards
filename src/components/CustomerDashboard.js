@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { PageShell } from './AuthCard';
-import { createCard, redeemCard } from '../utils/loyaltyCards';
+import { createCard, redeemCard, removeCard, deleteCustomerAccount, getCustomerCards } from '../utils/loyaltyCards';
 import { BUSINESS_TYPES } from '../constants';
 
 export default function CustomerDashboard({ currentUser, cards, onCardsChange, onShowQR, onLogout }) {
-  const [bizEmail, setBizEmail] = useState('');
-  const [addError, setAddError] = useState('');
-  const [addSuccess, setAddSuccess] = useState('');
+  const [bizEmail,    setBizEmail]    = useState('');
+  const [addError,    setAddError]    = useState('');
+  const [addSuccess,  setAddSuccess]  = useState('');
+  const [showConfirm, setShowConfirm] = useState(false); // delete account modal
 
+  // ── Add card ───────────────────────────────────────────────────────────────
   const handleAddCard = () => {
     setAddError('');
     setAddSuccess('');
@@ -22,29 +24,79 @@ export default function CustomerDashboard({ currentUser, cards, onCardsChange, o
     }
   };
 
+  // ── Redeem card ────────────────────────────────────────────────────────────
   const handleRedeem = (cardId) => {
     try {
       const reward = redeemCard(currentUser.email, cardId);
       alert(`🎉 You redeemed ${reward} Token. Check your Phantom wallet.`);
-      // Reload cards
-      const { getCustomerCards } = require('../utils/loyaltyCards');
       onCardsChange(getCustomerCards(currentUser.email));
     } catch (err) {
       alert(`⚠️ ${err.message}`);
     }
   };
 
+  // ── Remove single card ─────────────────────────────────────────────────────
+  const handleRemoveCard = (cardId, businessName) => {
+    const confirmed = window.confirm(
+      `🗑️ Remove your loyalty card for "${businessName}"?\n\nYou will lose all your current stamps. This cannot be undone.`
+    );
+    if (!confirmed) return;
+    const updated = removeCard(currentUser.email, cardId);
+    onCardsChange(updated);
+  };
+
+  // ── Delete account ─────────────────────────────────────────────────────────
+  const handleDeleteAccount = () => {
+    deleteCustomerAccount(currentUser.email);
+    onLogout();
+  };
+
   return (
     <PageShell onLogout={onLogout}>
+
+      {/* ── Delete Account Confirmation Modal ── */}
+      {showConfirm && (
+        <div style={{
+          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          zIndex: 1000, padding: '20px',
+        }}>
+          <div style={{ background: 'white', borderRadius: '16px', padding: '36px', maxWidth: '420px', width: '100%', boxShadow: '0 20px 60px rgba(0,0,0,0.25)' }}>
+            <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+              <div style={{ fontSize: '48px', marginBottom: '12px' }}>⚠️</div>
+              <h3 style={{ fontSize: '22px', margin: '0 0 8px 0', color: '#cc0000' }}>Delete Account</h3>
+              <p style={{ color: '#666', margin: 0, fontSize: '15px', lineHeight: '1.5' }}>
+                This will permanently delete your account and <strong>all your loyalty cards</strong>. This cannot be undone.
+              </p>
+            </div>
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button
+                onClick={() => setShowConfirm(false)}
+                style={{ flex: 1, padding: '14px', background: '#f0f0f0', border: 'none', borderRadius: '10px', fontSize: '15px', fontWeight: '600', cursor: 'pointer', color: '#555' }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteAccount}
+                style={{ flex: 1, padding: '14px', background: 'linear-gradient(135deg, #ff4444, #cc0000)', color: 'white', border: 'none', borderRadius: '10px', fontSize: '15px', fontWeight: '700', cursor: 'pointer' }}
+              >
+                Yes, Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Header ── */}
       <div style={{ marginBottom: '28px' }}>
         <h2 style={{ fontSize: '30px', margin: '0 0 4px 0' }}>My Loyalty Cards</h2>
         <p style={{ color: '#888', margin: 0 }}>Welcome back, {currentUser.fullName}! 👋</p>
       </div>
 
-      {/* Cards list */}
+      {/* ── Cards list ── */}
       {cards.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '48px 0' }}>
-          <div style={{ fontSize: '64px', marginBottom: '16px' }}>🎴</div>
+          {/* <div style={{ fontSize: '64px', marginBottom: '16px' }}>🎴</div> */}
           <p style={{ color: '#aaa', fontSize: '18px' }}>No loyalty cards yet.</p>
           <p style={{ color: '#bbb', fontSize: '14px' }}>Ask a business for their email and add a card below.</p>
         </div>
@@ -57,6 +109,7 @@ export default function CustomerDashboard({ currentUser, cards, onCardsChange, o
 
             return (
               <div key={card.id} style={{ border: `3px solid ${config.color}`, borderRadius: '16px', padding: '24px', background: '#fafafa' }}>
+
                 {/* Card header */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '18px' }}>
                   <div>
@@ -64,21 +117,22 @@ export default function CustomerDashboard({ currentUser, cards, onCardsChange, o
                     <h3 style={{ margin: '0 0 2px 0', fontSize: '20px' }}>{card.businessName}</h3>
                     <p style={{ margin: 0, color: '#999', fontSize: '13px' }}>{config.name}</p>
                   </div>
-                  <button
-                    onClick={() => onShowQR(card)}
-                    style={{
-                      background: config.color,
-                      color: 'white',
-                      border: 'none',
-                      padding: '10px 20px',
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      fontWeight: 'bold',
-                      fontSize: '14px',
-                    }}
-                  >
-                    📱 Show QR
-                  </button>
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <button
+                      onClick={() => onShowQR(card)}
+                      style={{ background: config.color, color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '14px' }}
+                    >
+                      Show QR
+                    </button>
+                    {/* Remove card */}
+                    <button
+                      onClick={() => handleRemoveCard(card.id, card.businessName)}
+                      title="Remove this card"
+                      style={{ background: 'white', color: '#cc0000', border: '2px solid #ffcccc', borderRadius: '8px', padding: '10px 12px', cursor: 'pointer', fontSize: '16px', lineHeight: 1, display: 'flex', alignItems: 'center' }}
+                    >
+                      🗑️
+                    </button>
+                  </div>
                 </div>
 
                 {/* Progress bar */}
@@ -109,9 +163,7 @@ export default function CustomerDashboard({ currentUser, cards, onCardsChange, o
                         transition: 'all 0.2s',
                       }}
                     >
-                      {i < card.stamps ? (
-                        <img src={config.stampShape} alt="" width={20} height={20} />
-                      ) : null}
+                      {i < card.stamps ? <img src={config.stampShape} alt="" width={20} height={20} /> : null}
                     </div>
                   ))}
                 </div>
@@ -120,20 +172,9 @@ export default function CustomerDashboard({ currentUser, cards, onCardsChange, o
                 {isFull && (
                   <button
                     onClick={() => handleRedeem(card.id)}
-                    style={{
-                      width: '100%',
-                      padding: '15px',
-                      background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '12px',
-                      fontSize: '16px',
-                      fontWeight: 'bold',
-                      cursor: 'pointer',
-                      boxShadow: '0 4px 15px rgba(245,87,108,0.35)',
-                    }}
+                    style={{ width: '100%', padding: '15px', background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', color: 'white', border: 'none', borderRadius: '12px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 15px rgba(245,87,108,0.35)' }}
                   >
-                     Redeem {card.tokenReward} Token!
+                    🎁 Redeem {card.tokenReward} Token!
                   </button>
                 )}
               </div>
@@ -142,12 +183,12 @@ export default function CustomerDashboard({ currentUser, cards, onCardsChange, o
         </div>
       )}
 
-      {/* Add new card */}
+      {/* ── Add new card ── */}
       <div style={{ borderTop: '2px solid #f0f0f0', paddingTop: '28px' }}>
         <h3 style={{ fontSize: '20px', margin: '0 0 12px 0' }}>Add a Loyalty Card</h3>
 
-        {addError && <div style={{ background: '#fff0f0', border: '1px solid #ffcccc', borderRadius: '8px', padding: '10px 14px', marginBottom: '14px', color: '#cc0000', fontSize: '14px' }}>{addError}</div>}
-        {addSuccess && <div style={{ background: '#f0fff4', border: '1px solid #b2dfdb', borderRadius: '8px', padding: '10px 14px', marginBottom: '14px', color: '#1b5e20', fontSize: '14px' }}>{addSuccess}</div>}
+        {addError   && <div style={{ background: '#fff0f0', border: '1px solid #ffcccc', borderRadius: '8px', padding: '10px 14px', marginBottom: '14px', color: '#cc0000',  fontSize: '14px' }}>{addError}</div>}
+        {addSuccess && <div style={{ background: '#f0fff4', border: '1px solid #b2dfdb', borderRadius: '8px', padding: '10px 14px', marginBottom: '14px', color: '#1b5e20',  fontSize: '14px' }}>{addSuccess}</div>}
 
         <div style={{ display: 'flex', gap: '10px' }}>
           <input
@@ -160,17 +201,7 @@ export default function CustomerDashboard({ currentUser, cards, onCardsChange, o
           />
           <button
             onClick={handleAddCard}
-            style={{
-              padding: '12px 24px',
-              background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              fontSize: '15px',
-              whiteSpace: 'nowrap',
-            }}
+            style={{ padding: '12px 24px', background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '15px', whiteSpace: 'nowrap' }}
           >
             ➕ Add
           </button>
@@ -179,6 +210,22 @@ export default function CustomerDashboard({ currentUser, cards, onCardsChange, o
           💡 Ask the business owner for their registered email address
         </p>
       </div>
+
+      {/* ── Danger Zone ── */}
+      <div style={{ borderTop: '2px solid #f0f0f0', marginTop: '36px', paddingTop: '28px' }}>
+        {/* <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#cc0000', margin: '0 0 8px 0' }}>⚠️ Danger Zone</h3> */}
+        
+        <button
+          onClick={() => setShowConfirm(true)}
+          style={{ padding: '12px 24px', background: 'white', color: '#cc0000', border: '2px solid #ffcccc', borderRadius: '10px', fontSize: '14px', fontWeight: '700', cursor: 'pointer' }}
+        >
+          🗑️ Delete My Account
+        </button>
+        <p style={{ fontSize: '13px', color: '#aaa', margin: '0 0 14px 0' }}>
+          Permanently delete your account and all loyalty cards.
+        </p>
+      </div>
+
     </PageShell>
   );
 }

@@ -3,15 +3,15 @@ import React from 'react';
 // Shared wrapper used by all login/signup pages
 export default function AuthCard({ emoji, title, subtitle, children, onBack, maxWidth = 500 }) {
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', padding: '20px' }}>
+    <div style={{ minHeight: '100vh', background: '#ffffff', padding: '20px' }}>
       <div style={{ maxWidth, margin: '0 auto' }}>
         <button
           onClick={onBack}
-          style={{ background: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', marginBottom: '20px', cursor: 'pointer', fontWeight: 'bold', fontSize: '14px', boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }}
+          style={{ background: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', marginBottom: '20px', cursor: 'pointer', fontWeight: 'bold', fontSize: '14px', boxShadow: '0 2px 8px rgba(0,0,0,0.10)' }}
         >
           ← Back
         </button>
-        <div style={{ background: 'white', borderRadius: '20px', padding: '40px', boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}>
+        <div style={{ background: 'white', borderRadius: '20px', padding: '40px', boxShadow: '0 8px 48px rgba(102, 126, 234, 0.18), 0 2px 16px rgba(0,0,0,0.08)' }}>
           <div style={{ textAlign: 'center', marginBottom: '32px' }}>
             <div style={{ fontSize: '64px', marginBottom: '16px' }}>{emoji}</div>
             <h2 style={{ fontSize: '30px', margin: '0 0 8px 0', color: '#222' }}>{title}</h2>
@@ -98,15 +98,15 @@ export function LinkButton({ children, color = '#667eea', ...props }) {
 // Page shell used by dashboard pages (with Logout button top-left)
 export function PageShell({ children, onLogout, maxWidth = 800 }) {
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', padding: '20px' }}>
+    <div style={{ minHeight: '100vh', background: '#ffffff', padding: '20px' }}>
       <div style={{ maxWidth, margin: '0 auto' }}>
         <button
           onClick={onLogout}
-          style={{ background: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', marginBottom: '20px', cursor: 'pointer', fontWeight: 'bold', fontSize: '14px', boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }}
+          style={{ background: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', marginBottom: '20px', cursor: 'pointer', fontWeight: 'bold', fontSize: '14px', boxShadow: '0 2px 8px rgba(0,0,0,0.10)' }}
         >
           ← Logout
         </button>
-        <div style={{ background: 'white', borderRadius: '20px', padding: '40px', boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}>
+        <div style={{ background: 'white', borderRadius: '20px', padding: '40px', boxShadow: '0 8px 48px rgba(102, 126, 234, 0.18), 0 2px 16px rgba(0,0,0,0.08)' }}>
           {children}
         </div>
       </div>
